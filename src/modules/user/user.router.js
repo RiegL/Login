@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import {create, getAll, getByEmail, getById} from './user.model.js';
-
+import authMiddleware from "../../middleware/authMiddleware.js";
 
 const router = Router();
 
@@ -25,6 +25,7 @@ router.get("/", async (req, res) => {
         res.status(500).json({ message: "Erro ao buscar usuários" });
     }
 })
+
 router.get("/:id", async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10); // Converte o id para número
@@ -42,4 +43,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+router.get("/me", authMiddleware, async (req, res) => {
+    res.status(200).json({data: req.user});
+})
 export default router;
